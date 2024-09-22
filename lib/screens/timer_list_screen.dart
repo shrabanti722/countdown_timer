@@ -8,7 +8,8 @@ class TimerListScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timers = ref.watch(timersProvider);
+    final timerManager = ref.watch(timerManagerProvider.notifier);
+    final timers = ref.watch(timerManagerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,10 +28,11 @@ class TimerListScreen extends HookConsumerWidget {
                 : ListView.builder(
                     itemCount: timers.length,
                     itemBuilder: (context, index) {
+                      final id = timers.keys.elementAt(index);
                       return Padding(
                         padding:
                             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: TimerWidget(index: index),
+                        child: TimerWidget(id: id),
                       );
                     },
                   ),
@@ -39,7 +41,7 @@ class TimerListScreen extends HookConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
               onPressed: () {
-                ref.read(timersProvider.notifier).addTimer();
+                timerManager.addTimer();
               },
               icon: const Icon(Icons.add),
               label: const Text('Add Timer'),
